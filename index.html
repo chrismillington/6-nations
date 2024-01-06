@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>6 nations table</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="display-1">6 Nations Scores</div>
+      </div>
+      <div class="row">
+        <div class="table"></div>
+      </div>
+
+      <div class="row">
+        <form class="scoreboard">
+          <select placeholder="Home Team" id="homeTeam"></select>
+          <input type="number" id="homeScore" class="homeScore" />
+          <span>Vs</span>
+          <input type="text" class="score" id="awayScore" />
+          <select placeholder="Away Team" id="awayTeam"></select>
+          <button>Submit</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
