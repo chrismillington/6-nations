@@ -1,3 +1,4 @@
+// Variables
 let table = document.querySelector(".table");
 let scoreBoard = document.querySelector(".scoreBoard");
 let homeTeam = document.querySelector("#homeTeam");
@@ -5,7 +6,7 @@ let homeScore = document.querySelector("#homeScore");
 let awayTeam = document.querySelector("#awayTeam");
 let awayScore = document.querySelector("#awayScore");
 let button = document.querySelector("button");
-
+let schedule = document.querySelector(".schedule");
 let teams = [
   {
     team: "England",
@@ -69,11 +70,16 @@ let teams = [
   },
 ];
 
+//Code
+button.addEventListener("click", result);
+
+// Functions
+
 toTable();
 scoreEntry("#homeTeam");
 scoreEntry("#awayTeam");
+scheduler();
 
-button.addEventListener("click", result);
 function toTable() {
   let header =
     "<table><th>Team</th><th id='num'>Pl</th><th>Won</th><th>Drawn</th><th>Lost</th><th>For</th><th>Ag</th><th>Points</th>";
@@ -95,19 +101,24 @@ function scoreEntry(side) {
   }
 }
 
-function result(e) {
-  e.preventDefault();
-  let hm;
-  let aw;
-
+function homeAway(teamList) {
+  let positions = [];
   for (x = 0; x < teams.length; x++) {
     if (teams[x].team === homeTeam.value) {
-      hm = x;
+      positions.push(x);
     }
     if (teams[x].team === awayTeam.value) {
-      aw = x;
+      positions.push(x);
     }
   }
+  return positions;
+}
+function result(e) {
+  e.preventDefault();
+  //Select teams
+  let positions = homeAway(teams);
+  let hm = positions[0];
+  let aw = positions[1];
 
   (teams[hm].for += parseInt(homeScore.value)),
     (teams[hm].against += parseInt(awayScore.value));
@@ -131,17 +142,48 @@ function result(e) {
   teams[hm].played = parseInt(teams[hm].won) + teams[hm].drawn + teams[hm].lost;
   teams[aw].played = parseInt(teams[aw].won) + teams[aw].drawn + teams[aw].lost;
 
-  console.log(
-    "Away",
-    parseInt(teams[aw].won) + parseInt(teams[aw]) + parseInt(teams[aw])
-  );
+  teams = teamsSort(teams);
+  toTable();
+}
 
-  teams.sort((a, b) => {
+function teamsSort(toSort) {
+  toSort.sort((a, b) => {
     if (a.points > b.points) return -1;
     if (a.points < b.points) return 1;
     if (a.for > b.for) return -1;
     if (a.for < b.for) return 1;
   });
-  console.log(teams);
-  toTable();
+  return toSort;
+}
+
+function check(val, reset) {
+  return val > teams.length ? (val = reset) : (val = val);
+}
+
+function getTeamsList() {
+  let scheduleList = [];
+  for (x = 0; x < teams.length; x++) {
+    scheduleList.push(teams[x].team);
+  }
+  return scheduleList;
+}
+
+function scheduler() {
+  scheduleList = getTeamsList();
+
+  for (y = 0; y < scheduleList.length - 1; y++) {
+    let temp = scheduleList[1];
+    for (x = 1; x < scheduleList.length; x++) {
+      scheduleList[x] = scheduleList[x + 1];
+    }
+    scheduleList[scheduleList.length - 1] = temp;
+    scheduleDisplay(scheduleList, y);
+  }
+}
+
+function scheduleDisplay(list, round) {
+  schedule.innerHTML += `<br> Week ${round + 1} <br>`;
+  for (x = 0; x < list.length; x += 2) {
+    schedule.innerHTML += list[x] + " Vs " + list[x + 1] + "<br>";
+  }
 }

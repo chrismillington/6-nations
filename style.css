@@ -50,3 +50,6 @@ button {
   font: 800 1rem Arial;
   padding: 0.5rem;
 }
+.schedule {
+  display: block;
+}
