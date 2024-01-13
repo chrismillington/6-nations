@@ -1,0 +1,14 @@
+.board {
+  background-color: red;
+}
+
+#matches input {
+  width: 1.5rem;
+}
+#matches {
+  justify-content: center;
+}
+
+.fixture {
+  display: block;
+}

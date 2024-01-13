@@ -89,7 +89,6 @@ function displayTable(location) {
 
 function fixtureScheduler() {
   let schedule = [];
-  let board = document.querySelector("#matches");
 
   scheduler();
 
@@ -110,28 +109,45 @@ function fixtureScheduler() {
         scheduleList[x] = scheduleList[x + 1];
       }
       scheduleList[scheduleList.length - 1] = temp;
-      schedule.push(...scheduleList);
+      for (a = 0; a < scheduleList.length; a += 2) {
+        let temp = new Object();
+        temp.homeTeam = scheduleList[a];
+        temp.homeScore = -1;
+        temp.awayTeam = scheduleList[a + 1];
+        temp.awayScore = -1;
+        schedule.push(temp);
+      }
     }
+    displaySchedule();
   }
+  function displaySchedule() {
+    console.log("displaying schedule");
+    let board = document.querySelector("#matches");
 
-  function fixtureScheduler(list, round) {
-    let matches = document.querySelector("#matches");
-    matches.innerHTML += `Week ${round} <br>`;
-    for (x = 0; x < matches.length; matches += 2) {
+    let week = 1;
+    for (i = 0; i < schedule.length; i++) {
+      if (i % (teams.length / 2) === 0) {
+        let tempWeek = document.createElement("div");
+        tempWeek.classList.add("week");
+        tempWeek.innerHTML = `Week ${week}`;
+        board.appendChild(tempWeek);
+        week++;
+      }
       let fixture = document.createElement("div");
       fixture.classList.add("fixture");
-      let homeTeam = fixture.createElement("input").classList.add("homeTeam");
-      let homeScore = fixture
-        .createElement("input")
-        .classList.add("homeTeamScore");
-      let awayScore = fixture
-        .createElement("input")
-        .classList.add("homeTeamScore");
-      let awayTeam = Fixture.createElement("input").classList.add("awayTeam");
+      fixture.innerHTML = `${schedule[i].homeTeam}   <input type="number" value=${schedule[1].homeScore}> Vs   <input type="number" value=${schedule[1].awayScore}> ${schedule[i].awayTeam}`;
+      board.appendChild(fixture);
     }
+    scoreProcess();
+  }
+
+  function scoreProcess() {
+    let fixtures = document.querySelectorAll(".fixture input");
+    console.log(fixtures);
+    let home1 = fixtures[x].parentElement;
+    console.log("homeTeam - " + home1.fixture);
   }
 }
-
 // function scheduleDisplay(list, round) {
 //   schedule.innerHTML += `<br> Week ${round + 1} <br>`;
 //   for (x = 0; x < list.length; x += 2) {
@@ -259,4 +275,4 @@ function fixtureScheduler() {
 //   for (x = 0; x < list.length; x += 2) {
 //     schedule.innerHTML += list[x] + " Vs " + list[x + 1] + "<br>";
 //   }
-// }
+//
