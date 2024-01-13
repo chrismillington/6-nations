@@ -3,6 +3,8 @@ const tableBox = document.querySelector("#tableBox");
 
 teamCreation();
 displayTable(tableBox);
+fixtureScheduler();
+
 // Team Creation Form
 
 function teamCreation() {
@@ -69,7 +71,6 @@ function displayTable(location) {
   // Create Table Body
   let body = document.createElement("tbody");
   for (x = 0; x < teams.length; x++) {
-    console.log(teams[x].team);
     let teamDetails = Object.values(teams[x]);
 
     let row = document.createElement("tr");
@@ -86,7 +87,57 @@ function displayTable(location) {
   location.appendChild(table);
 }
 
-function fixtureScheduler() {}
+function fixtureScheduler() {
+  let schedule = [];
+  let board = document.querySelector("#matches");
+
+  scheduler();
+
+  function teamList() {
+    // returns list of all team names
+    let teamNames = [];
+    for (x = 0; x < teams.length; x++) {
+      teamNames.push(teams[x].team);
+    }
+    return teamNames;
+  }
+
+  function scheduler() {
+    scheduleList = teamList();
+    for (y = 0; y < scheduleList.length - 1; y++) {
+      let temp = scheduleList[1];
+      for (x = 1; x < scheduleList.length; x++) {
+        scheduleList[x] = scheduleList[x + 1];
+      }
+      scheduleList[scheduleList.length - 1] = temp;
+      schedule.push(...scheduleList);
+    }
+  }
+
+  function fixtureScheduler(list, round) {
+    let matches = document.querySelector("#matches");
+    matches.innerHTML += `Week ${round} <br>`;
+    for (x = 0; x < matches.length; matches += 2) {
+      let fixture = document.createElement("div");
+      fixture.classList.add("fixture");
+      let homeTeam = fixture.createElement("input").classList.add("homeTeam");
+      let homeScore = fixture
+        .createElement("input")
+        .classList.add("homeTeamScore");
+      let awayScore = fixture
+        .createElement("input")
+        .classList.add("homeTeamScore");
+      let awayTeam = Fixture.createElement("input").classList.add("awayTeam");
+    }
+  }
+}
+
+// function scheduleDisplay(list, round) {
+//   schedule.innerHTML += `<br> Week ${round + 1} <br>`;
+//   for (x = 0; x < list.length; x += 2) {
+//     schedule.innerHTML += list[x] + " Vs " + list[x + 1] + "<br>";
+//   }
+// }
 
 // for (const key in user) {
 
