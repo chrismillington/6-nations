@@ -1,29 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>6 nations table</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css" />
-  <title>6 nations table</title>
-</head>
+  <body>
+    <div class="container">
+      <form class="team-entry">
+        <div class="head1">Enter Teams</div>
+        <div class="head2">Teams Entered</div>
+        <div id="teamsEntered"></div>
+        <input type="text" id="teamName" placeholder="Enter Team name here" />
+        <button id="createTeams">Click me</button>
+      </form>
+      <div class="tableBox" id="tableBox"></div>
+      <form class="matches" id="matches">
+        <table></table>
+        <button class="process">Process Fixtures</button>
+      </form>
+    </div>
 
-<body>
-  <div class="container">
-    <form class="team-entry">
-      <div class="head1">Enter Teams</div>
-      <div class="head2">Teams Entered</div>
-      <div id="teamsEntered">
-
-      </div>
-      <input type="text" id="teamName" placeholder="Enter Team name here">
-      <button id="createTeams">Click me</button>
-    </form>
-    <div class="tableBox" id="tableBox"></div>
-    <form class="matches" id="matches"></form>
-  </div>
-  <input type="number">
-  <script src="script.js"></script>
-</body>
-
+    <script src="script.js"></script>
+  </body>
 </html>

@@ -1,8 +1,7 @@
 let teams = [];
-const tableBox = document.querySelector("#tableBox");
 
 teamCreation();
-displayTable(tableBox);
+displayTable();
 fixtureScheduler();
 
 // Team Creation Form
@@ -55,7 +54,7 @@ function teamCreation() {
   }
 }
 
-function displayTable(location) {
+function displayTable() {
   let table = document.createElement("table");
 
   //Create Table Header
@@ -84,10 +83,12 @@ function displayTable(location) {
 
   // Add table and display at specified location
   table.appendChild(body);
-  location.appendChild(table);
+  document.querySelector(".tableBox").appendChild(table);
 }
-
+console.log(teams);
 function fixtureScheduler() {
+  console.log("displaying schedule");
+  let board = document.querySelector("#matches");
   let schedule = [];
 
   scheduler();
@@ -112,167 +113,83 @@ function fixtureScheduler() {
       for (a = 0; a < scheduleList.length; a += 2) {
         let temp = new Object();
         temp.homeTeam = scheduleList[a];
-        temp.homeScore = -1;
+        temp.homeScore = 0;
         temp.awayTeam = scheduleList[a + 1];
-        temp.awayScore = -1;
+        temp.awayScore = 0;
         schedule.push(temp);
       }
     }
     displaySchedule();
   }
-  function displaySchedule() {
-    console.log("displaying schedule");
-    let board = document.querySelector("#matches");
 
+  function displaySchedule() {
     let week = 1;
+    let table = document.querySelector("#matches table");
+
     for (i = 0; i < schedule.length; i++) {
       if (i % (teams.length / 2) === 0) {
-        let tempWeek = document.createElement("div");
+        let tempWeek = document.createElement("tr");
         tempWeek.classList.add("week");
         tempWeek.innerHTML = `Week ${week}`;
-        board.appendChild(tempWeek);
+        table.appendChild(tempWeek);
         week++;
       }
-      let fixture = document.createElement("div");
-      fixture.classList.add("fixture");
-      fixture.innerHTML = `${schedule[i].homeTeam}   <input type="number" value=${schedule[1].homeScore}> Vs   <input type="number" value=${schedule[1].awayScore}> ${schedule[i].awayTeam}`;
-      board.appendChild(fixture);
+
+      let match = document.createElement("tr");
+      match.classList.add("fixture");
+      match.innerHTML = `
+      <td class="homeTeam">${schedule[i].homeTeam}</td>
+      <td><input class="homeScore" type="number" value=${schedule[i].homeScore}></td>
+      <td><input class="awayScore" type="number" value=${schedule[i].awayScore}></td>
+      <td class="awayTeam">${schedule[i].awayTeam}</td>`;
+      table.appendChild(match);
     }
-    scoreProcess();
+
+    document.querySelector(".process").addEventListener("click", (e) => {
+      e.preventDefault();
+      let fixtures = document.querySelectorAll(".fixture");
+
+      for (i = 0; i < fixtures.length; i++) {
+        let homeT = fixtures[i].querySelector(".homeTeam").textContent;
+        let homeS = fixtures[i].querySelector(".homeScore").value;
+        let awayT = fixtures[i].querySelector(".awayTeam").textContent;
+        let awayS = fixtures[i].querySelector(".awayScore").value;
+        // console.log(homeS);
+        // console.log(awayS);
+        processScores(homeT, homeS, awayS, awayT);
+      }
+    });
   }
 
-  function scoreProcess() {
-    let fixtures = document.querySelectorAll(".fixture input");
-    console.log(fixtures);
-    let home1 = fixtures[x].parentElement;
-    console.log("homeTeam - " + home1.fixture);
+  // Bug with adding
+  function processScores(homeTeam, hs, as, awayTeam) {
+    homeScore = parseInt(hs);
+    awayScore = parseInt(as);
+    let homePos = findTeam(homeTeam);
+    let awayPos = findTeam(awayTeam);
+    console.log("Process Score Loaded" + (homeScore + awayScore));
+    if (homeScore != 0 && awayScore != 0) {
+      teams[homePos].scored += homeScore;
+      teams[homePos].against += awayScore;
+      teams[awayPos].scored += awayScore;
+      teams[awayPos].against += homeScore;
+      console.log(teams);
+      if (homeScore > awayScore) {
+        teams[homePos].wins += 3;
+      } else if (awayScore > homeScore) {
+        teams[awayPos].wins += 3;
+      } else {
+        teams[homePos].drawn += 1;
+        teams[awayPos].drawn += 1;
+      }
+    }
+    // displayTable();
+  }
+
+  function findTeam(team) {
+    for (x = 0; x < teams.length; x++) {
+      if (teams[x].team === team) return x;
+    }
+    return -1;
   }
 }
-// function scheduleDisplay(list, round) {
-//   schedule.innerHTML += `<br> Week ${round + 1} <br>`;
-//   for (x = 0; x < list.length; x += 2) {
-//     schedule.innerHTML += list[x] + " Vs " + list[x + 1] + "<br>";
-//   }
-// }
-
-// for (const key in user) {
-
-///  return `<tr><td>${tm.team}</td><td>${tm.played}</td><td>${tm.won}</td><td>${tm.drawn}</td><td>${tm.lost}</td><td>${tm.for}</td><td>${tm.against}</td><td>${tm.points}</td></tr>`;
-
-// //Code
-// button.addEventListener("click", result);
-
-// // Functions
-
-// toTable();
-// scoreEntry("#homeTeam");
-// scoreEntry("#awayTeam");
-// scheduler();
-
-// function toTable() {
-//   let header =
-//     "<table><th>Team</th><th id='num'>Pl</th><th>Won</th><th>Drawn</th><th>Lost</th><th>For</th><th>Ag</th><th>Points</th>";
-//   table.innerHTML =
-//     header +
-//     teams
-//       .map((teams) => {
-//         return `<tr><td>${nations.team}</td><td>${nations.played}</td><td>${nations.won}</td><td>${nations.drawn}</td><td>${nations.lost}</td><td>${nations.for}</td><td>${nations.against}</td><td>${nations.points}</td></tr>`;
-//       })
-//       .join() +
-//     "</table>";
-// }
-
-// function scoreEntry(side) {
-//   for (i = 0; i < teams.length; i++) {
-//     let opt = document.createElement("option");
-//     opt.innerText = teams[i].team;
-//     document.querySelector(side).appendChild(opt);
-//   }
-// }
-
-// function homeAway(teamList) {
-//   let positions = [];
-//   for (x = 0; x < teams.length; x++) {
-//     if (teams[x].team === homeTeam.value) {
-//       positions.push(x);
-//     }
-//     if (teams[x].team === awayTeam.value) {
-//       positions.push(x);
-//     }
-//   }
-//   return positions;
-// }
-// function result(e) {
-//   e.preventDefault();
-//   //Select teams
-//   let positions = homeAway(teams);
-//   let hm = positions[0];
-//   let aw = positions[1];
-
-//   (teams[hm].for += parseInt(homeScore.value)),
-//     (teams[hm].against += parseInt(awayScore.value));
-//   teams[aw].for += parseInt(awayScore.value);
-//   teams[aw].against += parseInt(homeScore.value);
-
-//   if (homeScore.value > awayScore.value) {
-//     teams[hm].won += 1;
-//     teams[aw].lost += 1;
-//     teams[hm].points += 3;
-//   } else if (awayScore.value > homeScore.value) {
-//     teams[aw].won += 1;
-//     teams[hm].lost += 1;
-//     teams[aw].points += 3;
-//   } else {
-//     teams[hm].drawn += 1;
-//     teams[aw].drawn += 1;
-//     teams[hm].points += 1;
-//     teams[aw].points += 1;
-//   }
-//   teams[hm].played = parseInt(teams[hm].won) + teams[hm].drawn + teams[hm].lost;
-//   teams[aw].played = parseInt(teams[aw].won) + teams[aw].drawn + teams[aw].lost;
-
-//   teams = teamsSort(teams);
-//   toTable();
-// }
-
-// function teamsSort(toSort) {
-//   toSort.sort((a, b) => {
-//     if (a.points > b.points) return -1;
-//     if (a.points < b.points) return 1;
-//     if (a.for > b.for) return -1;
-//     if (a.for < b.for) return 1;
-//   });
-//   return toSort;
-// }
-
-// function check(val, reset) {
-//   return val > teams.length ? (val = reset) : (val = val);
-// }
-
-// function getTeamsList() {
-//   let scheduleList = [];
-//   for (x = 0; x < teams.length; x++) {
-//     scheduleList.push(teams[x].team);
-//   }
-//   return scheduleList;
-// }
-
-// function scheduler() {
-//   scheduleList = getTeamsList();
-
-//   for (y = 0; y < scheduleList.length - 1; y++) {
-//     let temp = scheduleList[1];
-//     for (x = 1; x < scheduleList.length; x++) {
-//       scheduleList[x] = scheduleList[x + 1];
-//     }
-//     scheduleList[scheduleList.length - 1] = temp;
-//     scheduleDisplay(scheduleList, y);
-//   }
-// }
-
-// function scheduleDisplay(list, round) {
-//   schedule.innerHTML += `<br> Week ${round + 1} <br>`;
-//   for (x = 0; x < list.length; x += 2) {
-//     schedule.innerHTML += list[x] + " Vs " + list[x + 1] + "<br>";
-//   }
-//
